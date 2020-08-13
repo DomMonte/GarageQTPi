@@ -15,7 +15,9 @@ class GarageDoor(object):
     def __init__(self, config):
 
         # Config
-        self.relay_pin = config['relay']
+        #self.relay_pin = config['relay']
+        self.open_pin = config['open']
+        self.close_pin = config['close']
         self.state_pin = config['state']
         self.id = config['id']
         self.mode = int(config.get('state_mode') == 'normally_closed')
@@ -46,14 +48,14 @@ class GarageDoor(object):
 
     def open(self):
         if self.state == 'closed':
-            self.__press()
+            self.__open()
 
     def close(self):
         if self.state == 'open':
-            self.__press()
+            self.__close()
 
-    def stop(self):
-        self.__press()
+#    def stop(self):
+#        self.__press()
 
     # State is a read only property that actually gets its value from the pin
     @property
@@ -67,12 +69,24 @@ class GarageDoor(object):
             return 'open'
 
     # Mimick a button press by switching the GPIO pin on and off quickly
-    def __press(self):
-        GPIO.output(self.relay_pin, not self.invert_relay)
-        time.sleep(SHORT_WAIT)
-        GPIO.output(self.relay_pin, self.invert_relay)
+#    def __press(self):
+#        GPIO.output(self.relay_pin, not self.invert_relay)
+#        time.sleep(SHORT_WAIT)
+#        GPIO.output(self.relay_pin, self.invert_relay)
 
-   
+    # Mimick button press on open pin
+    def __open(self):
+        GPIO.output(self.open_pin, not self.invert_relay)
+        time.sleep(SHORT_WAIT)
+        GPIO.output(self.open_pin, self.invert_relay)
+    
+    # Mimick button press on close pin
+    
+    def __close(self):
+        GPIO.output(self.close_pin, not self.invert_relay)
+        time.sleep(SHORT_WAIT)
+        GPIO.output(self.close_pin, self.invert_relay)
+        
     # Provide an event for when the state pin changes
     def __stateChanged(self, channel):
         if channel == self.state_pin:
