@@ -33,8 +33,8 @@ def execute_command(door, command):
         door.open()
     elif command == "CLOSE" and door.state == 'open':
         door.close()
-    elif command == "STOP":
-        door.stop()
+#    elif command == "STOP":
+#        door.stop()
     else:
         print "Invalid command: %s" % command
 
